@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 //the wrist is moving weirdly but it has to do with the claw
 
@@ -30,6 +28,7 @@ public class EyeBot1 extends LinearOpMode {  // Removed .java here
     static final double WRIST_BACK_POSITION = 0; // this is not final it does need testing
     static final double WRIST_FORWARD_POSITION = 0.5; // this is not final it does need testing
     static final double WRIST_DOWN_POSITION = 1; // this is not final it does need testing
+    static final double WRIST_TILTED_UP_POSITION = 0.25;
     static boolean WRIST_BACK = true;
     static boolean WRIST_DOWN = false;
     static boolean WRIST_FORWARD = false;
@@ -178,19 +177,28 @@ public class EyeBot1 extends LinearOpMode {  // Removed .java here
 
             double sLiderLimit = 1000;
             if(gamepad2.left_trigger >0.1){
-                linearSliderMotor.setTargetPosition(currentPositionLinear+100);
-                linearSliderMotor.setPower(2);
-
+                // Tilt claw up to avoid dragging if wrist is all the way down
+                if(wristServo.getPosition() > WRIST_TILTED_UP_POSITION) {
+                    // Tilt wrist up
+                    wristServo.setPosition(WRIST_TILTED_UP_POSITION);
+                } else {
+                    linearSliderMotor.setTargetPosition(currentPositionLinear+100);
+                    linearSliderMotor.setPower(2);
+                }
             }
             else if(gamepad2.right_trigger >0.1){
-                linearSliderMotor.setTargetPosition(currentPositionLinear-100);
-                linearSliderMotor.setPower(2);
-
+                // Tilt claw up to avoid dragging if wrist is all the way down
+                if(wristServo.getPosition() > WRIST_TILTED_UP_POSITION) {
+                    // Tilt wrist up
+                    wristServo.setPosition(WRIST_TILTED_UP_POSITION);
+                } else {
+                    linearSliderMotor.setTargetPosition(currentPositionLinear-100);
+                    linearSliderMotor.setPower(2);
+                }
             }
             else {
                 linearSliderMotor.setPower(lowPower);
                 linearSliderMotor.setTargetPosition(linearSliderMotor.getCurrentPosition());
-
             }
 
             if (gamepad2.left_stick_x > 0.5){
