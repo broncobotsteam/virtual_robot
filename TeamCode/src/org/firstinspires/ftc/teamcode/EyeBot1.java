@@ -45,6 +45,22 @@ public class EyeBot1 extends LinearOpMode {  // Removed .java here
     static final double LINEAR_SLIDER_DOWN = 0;  // this is not final it does need testing
     static final double LINEAR_SLIDER_MIDDLE = 0;  // this is not final it does need testing
 
+    void updateTelemetry(){
+        this.telemetry.addLine("Positions");
+        this.telemetry.addData("Arm:", armMotor.getCurrentPosition());
+        this.telemetry.addData("Slider:", linearSliderMotor.getCurrentPosition());
+        this.telemetry.addData("Wrist:", wristServo.getPosition());
+        this.telemetry.addData("Claw:", clawServo.getPosition());
+        this.telemetry.addLine("Flags");
+        this.telemetry.addData("WRIST_BACK: ", WRIST_BACK);
+        this.telemetry.addData("WRIST_DOWN: ", WRIST_DOWN);
+        this.telemetry.addData("WRIST_FORWARD: ", WRIST_FORWARD);
+        this.telemetry.addData("CLAW_HALF: ", CLAW_HALF);
+        this.telemetry.addData("CLAW_CLOSED: ", CLAW_CLOSED);
+        this.telemetry.addData("CLAW_OPEN: ", CLAW_OPEN);
+        this.telemetry.update();
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         double tgtPower2 = CLAW_CLOSED_SERVO_POSITION;
@@ -88,9 +104,6 @@ public class EyeBot1 extends LinearOpMode {  // Removed .java here
             int currentPosition = armMotor.getCurrentPosition();
             int currentPositionLinear = linearSliderMotor.getCurrentPosition();
 
-            telemetry.addData("Arm at:", currentPosition);
-            telemetry.addData("Linear Slider at:", currentPositionLinear);
-            telemetry.update();
 
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
@@ -224,6 +237,7 @@ public class EyeBot1 extends LinearOpMode {  // Removed .java here
 
             }
 
+            this.updateTelemetry();
         }
 
     }
